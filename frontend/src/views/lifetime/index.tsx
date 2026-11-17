@@ -11,7 +11,9 @@ const columns = [
   "预测窗口天",
   "折现率",
   "客单价因子",
-  "留存率因子"
+  "留存率因子",
+  "预算分配动作",
+  "预算分配批次"
 ]
 const actions = [
   "提交模型校验",
@@ -134,8 +136,17 @@ export default function LifetimeView() {
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={String(row.id)}>
-              {columns.map((column) => <td key={column}>{row[column] ?? '—'}</td>)}
+            <tr key={String(row.id)} className={row['预算分配动作'] ? 'row-linked' : undefined}>
+              {columns.map((column) => {
+                if (column === '预算分配动作' && row[column]) {
+                  return (
+                    <td key={column}>
+                      <span className="tag tag-ok">{String(row[column])}</span>
+                    </td>
+                  )
+                }
+                return <td key={column}>{row[column] ?? '—'}</td>
+              })}
               <td className="row-actions">
                 {actions.map((action) => (
                   <button key={action} className="link" type="button" onClick={() => void runAction(action, row)}>
